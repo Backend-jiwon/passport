@@ -1,13 +1,14 @@
 var express = require('express');
 var passport = require('passport');
 var Strategy = require('passport-http-bearer').Strategy;
-var ids = require('./iiiiddd');
+var db = require('./db');
 var router = express.Router();
 
 
 passport.use(new Strategy(
   function(token, cb) {
-    db.users.findByToken(token, function(err, user) {
+    
+    db.findByToken(token, function(err, user) {
       if (err) { return cb(err); }
       if (!user) { return cb(null, false); }
       return cb(null, user);
@@ -17,10 +18,9 @@ passport.use(new Strategy(
 express().use(require('morgan')('combined'));
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
   //
-
-  var user_list=ids.getAll();
+  var user_list=db.getAll();
   res.json(user_list);
   
 });
@@ -28,33 +28,47 @@ router.get('/', function(req, res, next) {
 router.get('/:id',function(req,res){
   //
   const id=parseInt(req.params.id,10);
-  var name=ids.getname(id);
+  var name=db.getname(id);
   res.json(name);
   
 })
 
-router.put('/:id/:token/:name', function(req, res, next) {
+router.put('/:id/:token/:name', function(req, res) {
   //
-  const id=parseInt(req.params.id,10), token=parseInt(req.params.token,10), name=req.params.name;
-  console.log(id,token,name);
-
-  ids.add(id ,token ,name);
-  res.send('new id added');
+  const id=parseInt(req.params.id,10), token=req.params.token, name=req.params.name;
+  
+  db.add(id, token, name);
+  res.send('Welcome '+id +'!!');
 });
 
-router.patch('/:id/:token/:newname', function(req, res, next){
-  console.log(req);
+router.patch('/:newname',
+  passport.authenticate('bearer', { session: false }),
+  function(req, res){
+    
+    var id = req.user.id, newname=req.params.newname;
 
+    var well = db.change(id,newname);
+    
+    if(well)
+      res.json('now '+id+' is '+newname);
+    else
+      res.json('error: no such id');
 })
 
-router.delete('/:id/:token', passport.authenticate('bearer', { session: false }), function(req, res, next) {
-  //
-  //const id=parseInt(req.params.id,10);
-  //ids.del(req);
-  console.log(id);
-  res.send('delete!!');
-  
-});
+router.delete('/',
+  passport.authenticate('bearer', { session: false }),
+  function(req, res) {
+
+    const id = req.user.id;
+    
+    var well = db.del(id);
+    if(well) 
+      res.json(id+' is deleted');
+    else 
+      res.json('error: no such id');
+  });
+
+
 
 
 
