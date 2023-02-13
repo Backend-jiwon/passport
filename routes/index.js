@@ -43,7 +43,7 @@ router.put('/:id/:token/:name', function(req, res) {
   res.send('Welcome '+id +'!!');
 });
 
-//기존 user 이름 변경
+//기존 user 이름 변경, token 인증 필요
 router.patch('/:newname',
   passport.authenticate('bearer', { session: false }),
   function(req, res){
@@ -58,7 +58,7 @@ router.patch('/:newname',
       res.json('error: no such id');
 })
 
-//기존 user 삭제
+//기존 user 삭제, token 인증 필요
 router.delete('/',
   passport.authenticate('bearer', { session: false }),
   function(req, res) {
