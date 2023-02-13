@@ -4,7 +4,7 @@ var Strategy = require('passport-http-bearer').Strategy;
 var ids = require('./iiiiddd');
 var router = express.Router();
 
-//http://localhost:3000/1/1111/?access_token=1111
+
 passport.use(new Strategy(
   function(token, cb) {
     db.users.findByToken(token, function(err, user) {
