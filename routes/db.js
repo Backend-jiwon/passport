@@ -14,8 +14,8 @@ function findByToken (token, cb) {
     process.nextTick(function() {
       for (var i = 0, len = users.length; i < len; i++) {
 
-        var user=users[i];
-        if (user.token == token) {
+        var user = users[i];
+        if (user.token === token) {
           return cb(null, user);
         }
       }
@@ -25,32 +25,32 @@ function findByToken (token, cb) {
 
 function getAll()
 {
-    var user_list=[];
-    for(var i=0,len=users.length;i<len;i++)
+    var user_list = [];
+    for(var i = 0, len = users.length ;i < len; i++)
     {
-        user_list[i]={id:users[i].id, name: users[i].name};
+        user_list[i] = {id: users[i].id, name: users[i].name};
     }
 
     return user_list;
 }
 
-function getname(num)
+function getName(num)
 {
-    for(var i=0,len=users.length;i<len;i++)
+    for(var i = 0, len = users.length ; i<len ; i++)
     {
-        if(num==users[i].id) return users[i].name;
+        if(num == users[i].id ) return users[i].name;
     }
     return 'no id';
 }
 
-function add(id, token, name)
+function Add(id, token, name)
 {
-    users[users.length]={id: id, token: token, name: name};
+    users[users.length] = {id: id, token: token, name: name};
     
     return;
 }
 
-function change(id,newname)
+function Change(id,newname)
 {
     for(var i=0,len=users.length;i<len;i++)
     {
@@ -63,7 +63,7 @@ function change(id,newname)
     return false;
 }
 
-function del(id)
+function Del(id)
 {
     for(var i=0,len=users.length;i<len;i++)
     {
@@ -79,7 +79,7 @@ function del(id)
 
 exports.findByToken=findByToken;
 exports.getAll=getAll;
-exports.getname=getname;
-exports.add=add;
-exports.change=change;
-exports.del=del;
+exports.getName=getName;
+exports.Add=Add;
+exports.Change=Change;
+exports.Del=Del;
